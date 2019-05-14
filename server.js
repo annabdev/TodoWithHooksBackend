@@ -1,21 +1,20 @@
 const express = require("express");
 const app = express();
-const PORT = 6000;
-const mongoose = require("mongoose");
+const PORT = 4200;
+const monk = require("monk");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
 
-const db = require("./keys").mongoURI;
+const url = require("./keys").mongoURI;
 
 
-mongoose
-.connect(
-    db, { useNewUrlParser: true}
-)
-.then(() => console.log("MongoDB successfully connected"))
-.catch(err => console.log(err));
+const db = monk(url);
 
+db.then(() => {
+  console.log("Connected to MongoDB");
+});
+const people = db.get("work");
 
 
 app.listen(PORT, function() {
@@ -34,7 +33,7 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   const result = await todo.insert(req.body)
-  console.log("post called")
+  console.log("post worked")
   res.status(200).send(result)
 })
 
